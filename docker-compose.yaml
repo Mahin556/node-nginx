@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+
+  app1:
+    build:
+      context: .
+    image: node-app
+    environment:
+      APP_NAME: app1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]  
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  app2:
+    build:
+      context: .
+    image: node-app
+    environment:
+      APP_NAME: app2
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]  
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+
+  app3:
+    build:
+      context: .
+    image: node-app
+    environment:
+      APP_NAME: app3
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]  
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  nginx:
+    build: 
+      context: ./nginx/
+    image: nginx-nodejs-lb
+    depends_on:
+      app1:
+        condition: service_healthy
+      app2:
+        condition: service_healthy
+      app3:
+        condition: service_healthy
+    ports:
+      - 80:80 
+      - 443:443   
